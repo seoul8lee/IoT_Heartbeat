@@ -13,5 +13,6 @@
   <li>LCD 출력을 위해 "LiquidCrystal.h"를 설치합니다.</li>
   <li>리모콘 통신을 위해 "IRremote.h"를 설치합니다.</li>
   <li>심박 센서를 위해 "PulseSensorPlayground.h"를 설치합니다.</li>
-  <li>"iot.ino" 파일을 스케치에 로드하여 아두이노 UNO 보드에 로드합니다.</li>
+  <li>"iot.ino" 파일을 스케치에 로드하여 아두이노 UNO 보드에 업로드합니다.</li>
+  <li>"iot.cpp" 파일은 ino 파일이 깨질 경우에 다운로드하여 사용하십시오.</li>
 </ul>
