@@ -16,7 +16,7 @@ decode_results results;
 
 
 /* CPR Preprocess */
-int pressurePin = 0; //pressure reading pin
+int pressurePin = A1; //pressure reading pin
 int pressureRead; //for reading pressure pin
 const int buttonPin = 8;  // pin for CPR count
 unsigned long time; //to display time for compressions
