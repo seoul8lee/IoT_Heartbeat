@@ -90,7 +90,6 @@ void setup() {
        PulseSensor initialization failed,
        likely because our Arduino platform interrupts
        aren't supported yet.
-
        If your Sketch hangs here, try changing USE_PS_INTERRUPT to false.
     */
     /*
@@ -108,7 +107,8 @@ void setup() {
 
   Serial.begin(115200); // start serial communication / uncomment to debug
 
-
+  lcd.clear();
+  lcd.home();
   lcd.setCursor(0, 0);  
   lcd.print("Select Mode");
   Serial.println("Select Mode");
@@ -134,12 +134,14 @@ void loop() {
   /* CPR START */
   else if(selectMode == 1){
     if(cprCount == 0){
+      lcd.clear();
+      lcd.home();
       lcd.setCursor(0,0);
       lcd.print("Begin CPR");
       Serial.println("Begin CPR");
      
     }
-     pressureRead = analogRead(pressurePin);
+     
       time = millis(); //start time
       buttonState = digitalRead(buttonPin);
       
@@ -149,6 +151,7 @@ void loop() {
           lcd.clear();
           lcd.home();
           cprCount++; //add 1 to the running total
+          pressureRead = analogRead(pressurePin);
           Serial.println(cprCount);
           lcd.setCursor(0,0);
           lcd.print("Count: ");
@@ -160,20 +163,23 @@ void loop() {
             if(cprCount == 1){
                timeBegin = millis(); //beginning time
             }
-          
-          }
-          
-           //pressureRead = analogRead(pressurePin);
-          if (pressureRead < 500){
-              digitalWrite(pressGood, HIGH);
-              digitalWrite(pressBad, LOW);
-              //Serial.println(pressureRead);
-          }
-          else if (pressureRead > 501){
-              digitalWrite(pressBad, HIGH);
+
+          if (pressureRead < 100){
               digitalWrite(pressGood, LOW);
-              //Serial.println(pressureRead);
+              Serial.println(pressureRead);
           }
+          else if (pressureRead > 101){
+              
+              digitalWrite(pressGood, HIGH);
+              delay(50);
+              digitalWrite(pressGood, LOW);
+              Serial.println(pressureRead);
+          }  
+          
+          }
+          
+         
+          
         
         }
         
@@ -183,7 +189,6 @@ void loop() {
 
 
          if (cprCount == 30){ // 30:2 ratio for CPR, 30 total
-                cprCount = 0; //restart count
                 timeEnd = millis(); //capture end time for set
                 //Serial.println(timeEnd);
                 totalTime = (timeEnd - timeBegin) / 1000; //convert Ms to seconds
@@ -195,12 +200,16 @@ void loop() {
                 BPM_LCD = (bpmCount * 60.0);
                 Serial.print("Total time in sec: ");
                 Serial.println(totalTime);
+
+                lcd.clear();
                 lcd.home();
+                lcd.setCursor(0,0);
                 lcd.print("Rate (BPM): ");
                 lcd.setCursor(12,0);
                 lcd.print(BPM_LCD);
-                Serial.print("BPM is: ");
-                Serial.println(BPM_LCD);
+                delay(2000);
+                //Serial.print("BPM is: ");
+                //Serial.println(BPM_LCD);
                 lcd.setCursor(0,1);
                 lcd.print("Total Time: ");
                 lcd.setCursor(12,1);
@@ -211,7 +220,9 @@ void loop() {
                 if (cprCycle == 5){
                     cprCycle = 0;
                 }
-                
+                delay(2000);
+                cprCount = 0; //restart count
+
          }
          
          if (cprCount > 5 && cprCount <= 30) {
@@ -232,7 +243,7 @@ void loop() {
          }
          
         // Delay
-        delay(25); //changed from 50
+        delay(50); //changed from 50
         lastButtonState = buttonState;
      
        
@@ -241,7 +252,9 @@ void loop() {
 
   /* Pulse START */
   else if(selectMode==2){
-     lcd.setCursor(0,0);
+      lcd.clear();
+      lcd.home();
+      lcd.setCursor(0,0);
       lcd.print("Begin Pulse Check");
       
     if (pulseSensor.sawNewSample()) {
